@@ -79,8 +79,8 @@ class ScreenPanel:
             if callback:
                 callback(None)
             return
-        width = loc[1] if loc[0] == "file" else loc[1]
-        height = loc[1] if loc[0] == "file" else loc[1]
+        width = self._gtk.img_width if width is None else width
+        height = self._gtk.img_height if height is None else height
         if loc[0] == "file":
 
             def _load():
@@ -187,7 +187,7 @@ class ScreenPanel:
             return "-"
         seconds = total - elapsed
         if seconds <= 0:
-            return seconds
+            return "-"
         days = seconds // 86400
         seconds %= 86400
         hours = seconds // 3600
@@ -215,6 +215,7 @@ class ScreenPanel:
 
     @staticmethod
     def format_speed(bitrate):
+        bitrate = float(bitrate)
         suffixes = [
             "Kbits/s",
             "Mbits/s",
