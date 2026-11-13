@@ -79,8 +79,8 @@ class ScreenPanel:
             if callback:
                 callback(None)
             return
-        width = width if width is not None else self._gtk.img_width
-        height = height if height is not None else self._gtk.img_height
+        width = loc[1] if loc[0] == "file" else loc[1]
+        height = loc[1] if loc[0] == "file" else loc[1]
         if loc[0] == "file":
 
             def _load():
@@ -162,7 +162,7 @@ class ScreenPanel:
 
     @staticmethod
     def format_time(seconds):
-        spc = "\u00a0"  # Non breakable space
+        spc = " "  # Non breakable space
         if seconds is None or seconds < 1:
             return "-"
         days = seconds // 86400
@@ -187,7 +187,7 @@ class ScreenPanel:
             return "-"
         seconds = total - elapsed
         if seconds <= 0:
-            return "-"
+            return seconds
         days = seconds // 86400
         seconds %= 86400
         hours = seconds // 3600
@@ -197,11 +197,11 @@ class ScreenPanel:
         if self._config.get_main_config().getboolean("24htime", True):
             return (
                 f"{self.format_time(total - elapsed)} | {eta:%H:%M} "
-                f"{f' +{days:2.0f}d' if days > 0 else ''}"
+                f"{' +{days:2.0f}d' if days > 0 else ''}"
             )
         return (
             f"{self.format_time(total - elapsed)} | {eta:%I:%M %p} "
-            f"{f' +{days:2.0f}d' if days > 0 else ''}"
+            f"{' +{days:2.0f}d' if days > 0 else ''}"
         )
 
     @staticmethod
@@ -215,7 +215,6 @@ class ScreenPanel:
 
     @staticmethod
     def format_speed(bitrate):
-        bitrate = float(bitrate)
         suffixes = [
             "Kbits/s",
             "Mbits/s",
@@ -270,7 +269,7 @@ class ScreenPanel:
         )
         name.set_markup(f"<big><b>{option['name']}</b></big>")
 
-        labels = Gtk.Box(spacing=0, orientation=Gtk.Orientation.VERTICAL, valign=Gtk.Align.CENTER)
+        labels = Gtk.Box(spacing=0, valign=Gtk.Align.CENTER, orientation=Gtk.Orientation.VERTICAL)
         labels.add(name)
         if "tooltip" in option:
             tooltip = Gtk.Label(
@@ -362,7 +361,7 @@ class ScreenPanel:
         elif option["type"] == "button":
             select = self._gtk.Button("load", style="color3")
             if "callback" in option:
-                select.connect("clicked", option["callback"], option["name"])
+                select.connect("clicked", option["callback"], opt_name)
             select.set_hexpand(False)
             select.set_halign(Gtk.Align.END)
             row_box.add(select)
