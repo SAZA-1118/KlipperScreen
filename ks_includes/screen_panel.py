@@ -79,8 +79,8 @@ class ScreenPanel:
             if callback:
                 callback(None)
             return
-        width = self._gtk.img_width if width is None else width
-        height = self._gtk.img_height if height is None else height
+        width = width if width is not None else self._gtk.img_width
+        height = height if height is not None else self._gtk.img_height
         if loc[0] == "file":
 
             def _load():
@@ -197,11 +197,11 @@ class ScreenPanel:
         if self._config.get_main_config().getboolean("24htime", True):
             return (
                 f"{self.format_time(total - elapsed)} | {eta:%H:%M} "
-                f"{' +{days:2.0f}d' if days > 0 else ''}"
+                f"{f' +{days:2.0f}d' if days > 0 else ''}"
             )
         return (
             f"{self.format_time(total - elapsed)} | {eta:%I:%M %p} "
-            f"{' +{days:2.0f}d' if days > 0 else ''}"
+            f"{f' +{days:2.0f}d' if days > 0 else ''}"
         )
 
     @staticmethod
@@ -270,7 +270,7 @@ class ScreenPanel:
         )
         name.set_markup(f"<big><b>{option['name']}</b></big>")
 
-        labels = Gtk.Box(spacing=0, valign=Gtk.Align.CENTER, orientation=Gtk.Orientation.VERTICAL)
+        labels = Gtk.Box(spacing=0, orientation=Gtk.Orientation.VERTICAL, valign=Gtk.Align.CENTER)
         labels.add(name)
         if "tooltip" in option:
             tooltip = Gtk.Label(
