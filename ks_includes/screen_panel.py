@@ -162,7 +162,7 @@ class ScreenPanel:
 
     @staticmethod
     def format_time(seconds):
-        spc = "\\u00a0"  # Non breakable space
+        spc = " "  # Non breakable space
         if seconds is None or seconds < 1:
             return "-"
         days = seconds // 86400
