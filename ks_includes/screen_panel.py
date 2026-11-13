@@ -162,7 +162,7 @@ class ScreenPanel:
 
     @staticmethod
     def format_time(seconds):
-        spc = "\u00a0"  # Non breakable space
+        spc = "\\\\u00a0"  # Non breakable space
         if seconds is None or seconds < 1:
             return "-"
         days = seconds // 86400
@@ -362,7 +362,7 @@ class ScreenPanel:
         elif option["type"] == "button":
             select = self._gtk.Button("load", style="color3")
             if "callback" in option:
-                select.connect("clicked", option["callback"], option["name"])
+                select.connect("clicked", option["callback"], opt_name)
             select.set_hexpand(False)
             select.set_halign(Gtk.Align.END)
             row_box.add(select)
